@@ -73,7 +73,7 @@ public:
 
     cell(const int& xpos, const int& ypos) : cellpos_x(xpos / 40), cellpos_y(ypos / 40), location(xpos, ypos, 40, 40) {}
 
-    void bullet_check() {
+    void check() {
         //checks collision and cell.
         std::erase_if(enemy_bullets, [&](auto& b) {
             //bullet movement
@@ -164,10 +164,6 @@ public:
             }
             return false;
             });
-    }
-
-    void enemy_check() {
-
     }
 };
 
