@@ -153,7 +153,16 @@ public:
 
             //add an if statment to check the velocity direction of the enemy. If it checked all 8 surrounding for every one it's in, would be annoying.
             if (collisionl::logic::collision(e->location, map->cells[cellpos_x - 1][cellpos_y - 1].location) && this->location.x > 0 && this->location.y > 0) {
-                map->cells[cellpos_x - 1][cellpos_y - 1].enemies.emplace_back(e);
+                bool notfound = false;
+	    	for (auto& en : map->cells[cellpos_x - 1][cellpos_y].location) {
+			if (e.id == en.id) {
+				notfound = true;
+				break;
+			}
+		}
+	    	if (!notfound) {
+			map->cells[cellpos_x - 1][cellpos_y - 1].enemies.emplace_back(e);
+		}
             }
 
             //I need to change this so it moves the enemy 1 square back... it's a little tricky bc of the intended pathing mechanic... guess I come back if I expand beyond collision
