@@ -34,6 +34,8 @@ Player player;
 class enemy {
 public: 
     location_data location;
+    bool on_path; //intended for a walk route the enemy should take when not los with player
+    bool line_of_sight;
 };
 
 class bullet {
@@ -88,6 +90,32 @@ public:
             if (collisionl::logic::collision(b->location, player.location)) {
                 //insert health logic
                 return true;
+            }
+            return false;
+        });
+        
+        std::erase_if(player_bullets, [&](auto& b) {
+            b->location.x += b->x_velocity;
+            b->location.y += b->y_velocity;
+
+            if (!collisionl::logic::collision(b->location, location)) {
+                int grid_x = b->location.x / 40;
+                int grid_y = b->location.y / 40;
+                auto& neighbor = map->cells[grid_y][grid_x];
+                neighbor.enemy_bullets.push_back(std::move(b));
+                return true;
+            }
+
+            for (wall& w : walls) {
+                if (collisionl::logic::collision(b->location, w.location)) {
+                    return true;
+                }
+            }
+            for (enemy& e : enemies) {
+                if (collisionl::logic::collision(b->location, e.location)) {
+                    //insert health logic
+                    return true;
+                }
             }
             return false;
             });
